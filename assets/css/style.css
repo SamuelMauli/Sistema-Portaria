@@ -120,9 +120,33 @@ footer {
     border-radius: 8px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: calc(100% - 220px); /* Ajuste a largura para ocupar o restante da tela após a sidebar */
+    width: 100%;
     position: relative;
     margin-left: 0; /* Espaço para a sidebar */
+}
+/* Conteúdo principal para saídas */
+.container-saidas {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+/* Container de saída e visitas */
+.saida-container, .visitas-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 48%; /* Dividem o espaço 50% cada uma, com um pequeno espaçamento */
+}
+
+/* Estilo para os formulários */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
 h2 {

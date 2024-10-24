@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once('../includes/db.php');
 
-// Função para processar os cadastros de cada tipo
+// Funcão para processar os cadastros de cada tipo
 function processForm($conn) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tipoCadastro = $_POST['tipoCadastro'];
@@ -19,7 +19,7 @@ function processForm($conn) {
                 $stmt = $conn->prepare("INSERT INTO funcionarios_aeb (nome, telefone) VALUES (?, ?)");
                 $stmt->bind_param("ss", $nome, $telefone);
                 $stmt->execute();
-                echo "Funcionário AEB cadastrado com sucesso!";
+                echo "Funcionario AEB cadastrado com sucesso!";
                 break;
 
             case 'motorista':
@@ -49,7 +49,7 @@ function processForm($conn) {
                 $stmt = $conn->prepare("INSERT INTO usuarios (nome, senha) VALUES (?, ?)");
                 $stmt->bind_param("ss", $nome, $senha);
                 $stmt->execute();
-                echo "Usuário do sistema cadastrado com sucesso!";
+                echo "Usuario do sistema cadastrado com sucesso!";
                 break;
 
             case 'visitante':
@@ -103,18 +103,18 @@ processForm($conn);
 
     <div class="container-cadastro">
         <h2>Cadastro</h2>
-        <p style="text-align: center;">Clique em uma das opções abaixo para cadastrar:</p>
+        <p style="text-align: center;">Clique em uma das opcoes abaixo para cadastrar:</p>
 
         <div class="nav-buttons">
-            <button class="nav-button" data-form="form-funcionario_aeb">Funcionário AEB</button>
+            <button class="nav-button" data-form="form-funcionario_aeb">Funcionario AEB</button>
             <button class="nav-button" data-form="form-motorista">Motorista</button>
             <button class="nav-button" data-form="form-transportadora">Transportadora</button>
-            <button class="nav-button" data-form="form-usuario_sistema">Usuário do Sistema</button>
+            <button class="nav-button" data-form="form-usuario_sistema">Usuario do Sistema</button>
             <button class="nav-button" data-form="form-visitante">Visitante</button>
         </div>
 
         <form id="form-funcionario_aeb" class="formulario-cadastro" method="POST" action="cadastro.php">
-            <h3>Cadastro Funcionário AEB</h3>
+            <h3>Cadastro Funcionario AEB</h3>
             <input type="hidden" name="tipoCadastro" value="funcionario_aeb">
             <div class="input-group">
                 <div style="flex: 1; margin-right: 10px;">
@@ -126,7 +126,7 @@ processForm($conn);
                     <input type="text" name="telefone" required>
                 </div>
             </div>
-            <button type="submit">Cadastrar Funcionário AEB</button>
+            <button type="submit">Cadastrar Funcionario AEB</button>
         </form>
 
         <!-- Cadastro Motorista -->
@@ -172,16 +172,16 @@ processForm($conn);
             </div>
             <div class="input-group">
                 <div style="flex: 1; margin-right: 10px;">
-                    <label for="endereco">Endereço:</label>
+                    <label for="endereco">Endereco:</label>
                     <input type="text" name="endereco" required>
                 </div>
             </div>
             <button type="submit">Cadastrar Transportadora</button>
         </form>
 
-        <!-- Cadastro Usuário de Sistema -->
+        <!-- Cadastro Usuario de Sistema -->
         <form id="form-usuario_sistema" class="formulario-cadastro" method="POST" action="cadastro.php" style="display:none;">
-            <h3>Cadastro Usuário de Sistema</h3>
+            <h3>Cadastro Usuario de Sistema</h3>
             <input type="hidden" name="tipoCadastro" value="usuario_sistema">
             <div class="input-group">
                 <div style="flex: 1; margin-right: 10px;">
@@ -193,7 +193,7 @@ processForm($conn);
                     <input type="password" name="senha" required>
                 </div>
             </div>
-            <button type="submit">Cadastrar Usuário de Sistema</button>
+            <button type="submit">Cadastrar Usuario de Sistema</button>
         </form>
 
         <!-- Cadastro Visitante -->
