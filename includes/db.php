@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 // Arquivo: includes/db.php
 
@@ -70,3 +71,23 @@ $conn = conectarBancoDeDados();
 // ... (operações com o banco de dados)
 // fecharConexao($conn);
 ?>
+=======
+<?php
+function getConnection() {
+    $host = 'localhost';
+    $user = 'root';
+    $password = 'rootB4ll3s0l';
+    $database = 'portaria';
+
+    $conn = new mysqli($host, $user, $password, $database);
+
+    if ($conn->connect_error) {
+        die("Conex�o falhou: " . $conn->connect_error);
+    }
+
+    return $conn;
+}
+
+
+?>
+>>>>>>> ccc14c2 (Initial commit)

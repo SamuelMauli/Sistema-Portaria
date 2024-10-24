@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Estilos gerais */
 * {
     margin: 0;
@@ -278,4 +279,262 @@ button[type="submit"]:hover {
         width: 100%;
         position: relative; /* Ajusta a posição para rodapé em telas menores */
     }
+=======
+/* Estilos gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Barra lateral (sidebar) */
+.sidebar {
+    width: 250px; /* Largura fixa da sidebar */
+    background-color: #00052c; /* Azul escuro */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinhamento à esquerda */
+    padding: 20px 10px; /* Padding com menos espaço horizontal */
+    position: relative; /* Para que o footer não a sobreponha */
+    transition: width 0.3s; /* Transição suave ao expandir/retrair */
+}
+
+.sidebar.expanded {
+    width: 250px; /* Largura expandida */
+}
+
+.sidebar.collapsed {
+    width: 60px; /* Largura colapsada */
+}
+
+/* Botão de alternância */
+.toggle-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Logo */
+.sidebar .logo img {
+    width: 100%; /* A logo ocupa toda a largura disponível */
+    max-width: 150px; /* Limita o tamanho máximo */
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/* Menu de navegação */
+.nav-menu {
+    width: 100%;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.nav-menu li {
+    width: 100%;
+    text-align: left; /* Alinhamento à esquerda */
+}
+
+.nav-menu li a {
+    display: flex; /* Usar flexbox para alinhar ícones e texto */
+    align-items: center; /* Alinha verticalmente os ícones */
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #ffffff; /* Ligeira mudança na borda */
+    transition: background-color 0.3s; /* Transição suave */
+}
+
+.nav-menu li a i {
+    margin-right: 10px; /* Espaçamento entre ícone e texto */
+}
+
+.nav-menu li a:hover {
+    background-color: #003c60; /* Azul mais claro ao passar o mouse */
+}
+
+/* Esconder o texto quando colapsado */
+.sidebar.collapsed .menu-text {
+    display: none;
+}
+
+/* Mostrar o ícone */
+.sidebar.collapsed i {
+    margin: 0 auto;
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #00052c; /* Azul */
+    color: white;
+    position: relative; /* Posicionamento relativo para se ajustar à sidebar */
+    left: 0;
+    width: 100%; /* O footer ocupa toda a largura da página */
+}
+
+
+.container-cadastro {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: calc(100% - 220px); /* Ajuste a largura para ocupar o restante da tela após a sidebar */
+    position: relative;
+    margin-left: 0; /* Espaço para a sidebar */
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px; /* Margem inferior para espaçamento */
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.nav-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Para que todos os botões ocupem espaço igual */
+    margin: 0 5px; /* Margem lateral para espaçamento */
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+.formulario-cadastro {
+    display: none;
+    margin-top: 20px; /* Margem superior para espaçamento entre nav e formulário */
+}
+
+.input-group {
+    display: flex; /* Utiliza flexbox para alinhar os inputs */
+    justify-content: space-between; /* Distribui o espaço igualmente entre os inputs */
+    margin-bottom: 10px; /* Margem inferior reduzida para espaçamento */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%; /* Cada input ocupará 100% de largura disponível */
+    padding: 10px;
+    margin-bottom: 5px; /* Margem inferior reduzida */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-button {
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove a margem esquerda em telas pequenas */
+    }
+
+    .input-group {
+        flex-direction: column; /* Muda a direção dos inputs para coluna em telas pequenas */
+    }
+
+    input[type="text"], input[type="password"] {
+        width: 100%; /* Inputs ocupam 100% da largura em telas pequenas */
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .nav-menu li a {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .sidebar .logo img {
+        max-width: 120px; /* Ajusta a logo para telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .main-content {
+        padding-top: 150px; /* Para compensar a barra lateral quando horizontal */
+    }
+
+    footer {
+        left: 0;
+        width: 100%;
+        position: relative; /* Ajusta a posição para rodapé em telas menores */
+    }
+>>>>>>> ccc14c2 (Initial commit)
 }
