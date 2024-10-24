@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include('../includes/db_connect.php');
+include('../includes/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $motorista_id = $_POST['motorista_id'];
