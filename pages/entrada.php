@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include('../includes/db_connect.php'); // Certifique-se de ter o arquivo de conexão ao banco de dados
+include('../includes/db_connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $motorista_id = $_POST['motorista_id'];
