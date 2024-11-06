@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     $conn = getConnection();
-
     $stmt = $conn->prepare("SELECT id, nome, senha FROM usuarios WHERE nome = ?");
     $stmt->bind_param('s', $username);
     $stmt->execute();
@@ -17,19 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $result->fetch_assoc();
 
         if (password_verify($password, $user['senha'])) {
-            // Login bem-sucedido, define as vari·veis de sess„o
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['nome'];
-
             header('Location: ../pages/dashboard.php');
             exit();
         } else {
-            $_SESSION['login_error'] = 'Senha incorreta. Tente novamente.';
+            $_SESSION['login_error'] = 'Senha incorreta.';
             header('Location: ../pages/login.php');
             exit();
         }
     } else {
-        $_SESSION['login_error'] = 'Usu·rio n„o encontrado.';
+        $_SESSION['login_error'] = 'Usu√°rio n√£o encontrado.';
         header('Location: ../pages/login.php');
         exit();
     }

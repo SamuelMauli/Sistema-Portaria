@@ -7,42 +7,51 @@ if (!isset($_SESSION['user_id'])) {
 
 include('../includes/db.php');
 
+// Fun√ß√£o para sanitizar dados de entrada
+function sanitize_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $motorista_id = $_POST['motorista_id'];
-    $transportadora_id = $_POST['transportadora_id'];  // Verifique se h· necessidade de salvar esse campo tambÈm
-    $placa_veiculo = $_POST['placa_veiculo'];
-    $finalidade_id = $_POST['finalidade_id'];
-    $ajudante_nome = $_POST['ajudante_nome'] ?? null;
-    $ajudante_doc = $_POST['ajudante_doc'] ?? null;
-    $responsavel_id = $_POST['responsavel_id'];
-    $observacao = $_POST['observacao'] ?? null;
+    // Sanitizar e validar as entradas
+    $motorista_id = isset($_POST['motorista_id']) ? sanitize_input($_POST['motorista_id']) : null;
+    $transportadora_id = isset($_POST['transportadora_id']) ? sanitize_input($_POST['transportadora_id']) : null;
+    $placa_veiculo = isset($_POST['placa_veiculo']) ? sanitize_input($_POST['placa_veiculo']) : null;
+    $finalidade_id = isset($_POST['finalidade_id']) ? sanitize_input($_POST['finalidade_id']) : null;
+    $ajudante_nome = isset($_POST['ajudante_nome']) ? sanitize_input($_POST['ajudante_nome']) : null;
+    $ajudante_doc = isset($_POST['ajudante_doc']) ? sanitize_input($_POST['ajudante_doc']) : null;
+    $responsavel_id = isset($_POST['responsavel_id']) ? sanitize_input($_POST['responsavel_id']) : null;
+    $observacao = isset($_POST['observacao']) ? sanitize_input($_POST['observacao']) : null;
 
-    // Pega a data e hora atual para registrar a entrada
-    $data_entrada = date('Y-m-d H:i:s');  // Data e hora atual
-    $data_saida = null;  // A data de saÌda ser· registrada posteriormente
-
-    // Prepara a consulta SQL para inserÁ„o
-    $stmt = $conn->prepare("INSERT INTO entradas_saidas 
-        (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, data_saida, placa_veiculo, observacao, ajudante_nome, ajudante_doc) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-    // Substitua 'local_entrada_id' pelo valor correto, se for fixo ou derivado de outro dado.
-    $local_entrada_id = 1; // Exemplo, troque isso pelo valor correto
-
-    // Passando os par‚metros para a query
-    $stmt->bind_param("iiisssssss", $motorista_id, $finalidade_id, $local_entrada_id, $responsavel_id, $data_entrada, $data_saida, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc);
-
-    if ($stmt->execute()) {
-        echo "Entrada registrada com sucesso!";
+    // Validar os campos obrigat√≥rios
+    if (!$motorista_id || !$placa_veiculo || !$finalidade_id || !$responsavel_id) {
+        $error_message = "Todos os campos obrigat√≥rios devem ser preenchidos!";
     } else {
-        echo "Erro ao registrar entrada: " . $stmt->error;
-    }
+        // Pega a data e hora atual
+        $data_entrada = date('Y-m-d H:i:s');
+        $data_saida = null; // A data de sa√≠da ser√° registrada posteriormente
 
-    $stmt->close();
+        // Preparar a consulta SQL para inser√ß√£o
+        $stmt = $conn->prepare("INSERT INTO entradas_saidas 
+            (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, data_saida, placa_veiculo, observacao, ajudante_nome, ajudante_doc) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        // Definir 'local_entrada_id' fixo como exemplo, deve ser alterado conforme necess√°rio
+        $local_entrada_id = 1;
+
+        // Vincular os par√¢metros para a consulta
+        $stmt->bind_param("iiisssssss", $motorista_id, $finalidade_id, $local_entrada_id, $responsavel_id, $data_entrada, $data_saida, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc);
+
+        if ($stmt->execute()) {
+            $success_message = "Entrada registrada com sucesso!";
+        } else {
+            $error_message = "Erro ao registrar entrada: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -53,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
-        /* Reset b·sico */
+        /* Reset b√°sico */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -67,13 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 0;
         }
 
-
-        /* Conte˙do principal */
+        /* Conte√∫do principal */
         .content {
             padding: 30px;
-            background-color: #f9f9f9;
+            background-color: #fff;
             width: 100%;
-
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .content h2 {
@@ -81,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 20px;
         }
 
-        /* Formul·rio estilizado */
+        /* Formul√°rio estilizado */
         form {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -119,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             outline: none;
         }
 
-        /* Bot„o estilizado */
+        /* Bot√£o estilizado */
         button {
             padding: 15px;
             background-color: #28a745;
@@ -128,13 +137,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
-            grid-column: span 2; /* O bot„o vai ocupar duas colunas no grid */
+            grid-column: span 2; /* O bot√£o vai ocupar duas colunas no grid */
             transition: background-color 0.3s ease;
             width: 100%;
         }
 
         button:hover {
             background-color: #218838;
+        }
+
+        /* Mensagens de erro e sucesso */
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
 
         /* Ajustar o layout para telas menores */
@@ -144,11 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             button {
-                grid-column: span 1; /* Bot„o ocupa toda a largura */
+                grid-column: span 1; /* Bot√£o ocupa toda a largura */
             }
         }
     </style>
-
 </head>
 <body>
 
@@ -156,9 +183,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sidebar -->
     <?php include('../includes/sidebar.php'); ?>
 
-    <!-- Conte˙do principal -->
+    <!-- Conte√∫do principal -->
     <div class="content">
         <h2>Registrar Entrada</h2>
+
+        <!-- Mensagens de sucesso ou erro -->
+        <?php if (isset($success_message)): ?>
+            <div class="message success"><?= $success_message ?></div>
+        <?php elseif (isset($error_message)): ?>
+            <div class="message error"><?= $error_message ?></div>
+        <?php endif; ?>
 
         <form method="POST" action="dashboard.php">
             <!-- Motorista -->
@@ -170,12 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Transportadora -->
             <div class="input-group">
                 <label for="transportadora_id">Transportadora (ID):</label>
-                <input type="number" id="transportadora_id" name="transportadora_id" required>
+                <input type="number" id="transportadora_id" name="transportadora_id">
             </div>
 
-            <!-- VeÌculo -->
+            <!-- Ve√≠culo -->
             <div class="input-group">
-                <label for="veiculo_id">Placa Veiculo:</label>
+                <label for="placa_veiculo">Placa Ve√≠culo:</label>
                 <input type="text" id="placa_veiculo" name="placa_veiculo" required>
             </div>
 
@@ -196,25 +230,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" id="ajudante_doc" name="ajudante_doc">
             </div>
 
-            <!-- Respons·vel -->
+            <!-- Respons√°vel -->
             <div class="input-group">
-                <label for="responsavel_id">Respons·vel AEB:</label>
+                <label for="responsavel_id">Respons√°vel AEB:</label>
                 <input type="number" id="responsavel_id" name="responsavel_id" required>
             </div>
 
-            <!-- ObservaÁ„o -->
-            <div class="input-group" style="flex: 1 1 100%;">
-                <label for="observacao">ObservaÁ„o:</label>
+            <!-- Observa√ß√µes -->
+            <div class="input-group">
+                <label for="observacao">Observa√ß√£o:</label>
                 <input type="text" id="observacao" name="observacao">
             </div>
 
-            <!-- Bot„o de Envio -->
+            <!-- Bot√£o de envio -->
             <button type="submit">Registrar Entrada</button>
         </form>
     </div>
 </div>
-
-<?php include('../includes/footer.php'); ?>
 
 </body>
 </html>

@@ -1,18 +1,22 @@
 <?php
-function getConnection() {
-    $host = 'localhost';
-    $user = 'root';
-    $password = 'rootB4ll3s0l';
-    $database = 'portaria';
+// Arquivo de configuração para credenciais
+$host = 'localhost';
+$user = 'root';
+$password = 'root';
+$database = 'portaria_db';
 
-    $conn = new mysqli($host, $user, $password, $database);
+// Criação da conexão
+$conn = new mysqli($host, $user, $password, $database);
 
-    if ($conn->connect_error) {
-        die("Conex�o falhou: " . $conn->connect_error);
-    }
-
-    return $conn;
+// Checando se a conexão foi bem-sucedida
+if ($conn->connect_error) {
+    // Exibindo uma mensagem de erro genérica para produção
+    error_log("Erro de conexão: " . $conn->connect_error); // Registra no log de erro
+    die("Não foi possível conectar ao banco de dados."); // Mensagem genérica ao usuário
+} else {
+    echo "Conexão bem-sucedida!";
 }
 
-
+// Fechando a conexão ao banco de dados
+$conn->close();
 ?>

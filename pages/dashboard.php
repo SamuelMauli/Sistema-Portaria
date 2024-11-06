@@ -22,14 +22,14 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Incluir a sidebar -->
     <?php include('../includes/sidebar.php'); ?>
 
-    <!-- Conteúdo principal -->
+    <!-- Conte?do principal -->
     <main class="main-content">
         <h2>Bem-vindo, <?php echo $_SESSION['username']; ?>!</h2>
-        <p>Escolha uma das opções no menu lateral.</p>
+        <p>Escolha uma das op??es no menu lateral.</p>
     </main>
 </div>
 
-<!-- Incluir o rodapé -->
+<!-- Incluir o rodap? -->
 <?php include('../includes/footer.php'); ?>
 
 </body>
