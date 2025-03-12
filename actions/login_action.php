@@ -3,8 +3,14 @@ session_start();
 require_once('../includes/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    if (empty($username) || empty($password)) {
+        $_SESSION['login_error'] = 'Usuário e senha são obrigatórios.';
+        header('Location: ../pages/login.php');
+        exit();
+    }
 
     $conn = getConnection();
     $stmt = $conn->prepare("SELECT id, nome, senha FROM usuarios WHERE nome = ?");
@@ -22,13 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         } else {
             $_SESSION['login_error'] = 'Senha incorreta.';
-            header('Location: ../pages/login.php');
-            exit();
         }
     } else {
         $_SESSION['login_error'] = 'Usuário não encontrado.';
-        header('Location: ../pages/login.php');
-        exit();
     }
+
+    header('Location: ../pages/login.php');
+    exit();
 }
 ?>
