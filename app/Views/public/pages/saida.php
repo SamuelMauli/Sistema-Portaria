@@ -18,8 +18,13 @@ $entradas_sem_saida = $conn->query("SELECT id, motorista_id FROM entradas_saidas
 // Consulta visitas com salas ocupadas
 $visitas_ocupadas = $conn->query("SELECT av.id, av.id, s.nome AS sala_nome 
                                   FROM agenda_visitas av 
+<<<<<<< HEAD:pages/saida.php
                                   JOIN salas s ON av.id = s.id 
                                   WHERE av.hora_visita_saida IS NULL");
+=======
+                                  JOIN salas s ON av.sala_aeb_id = s.id 
+                                  WHERE av.hora_visita_saida IS NULL AND s.ocupada = 1");
+>>>>>>> 99269b01aeab526919df8725981ae704117a40d5:app/Views/public/pages/saida.php
 ?>
 
 <!DOCTYPE html>
@@ -28,11 +33,7 @@ $visitas_ocupadas = $conn->query("SELECT av.id, av.id, s.nome AS sala_nome
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Saída - Sistema de Portaria</title>
-
-    <!-- Conectando o CSS principal -->
     <link rel="stylesheet" href="../assets/css/style.css">
-
-    <!-- Estilo adicional para a página -->
     <style>
         body {
             font-family: 'Arial', sans-serif;

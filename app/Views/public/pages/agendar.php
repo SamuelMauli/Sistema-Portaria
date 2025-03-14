@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../pages/login.php');
+    header('Location: /../Views/auth/login');
     exit();
 }
 
@@ -18,7 +18,7 @@ try {
 
     // Buscar finalidades
     $query_finalidades = "SELECT id, descricao FROM finalidades";
-    $result_finalidades = $conn->query($query_finalidades);
+    $result_finalidades = $conn->query($query_finalidades); // Defina $result_finalidades aqui
     if (!$result_finalidades) {
         throw new Exception("Erro ao buscar finalidades: " . $conn->error);
     }

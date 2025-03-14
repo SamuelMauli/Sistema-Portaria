@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <div class="container">
     <!-- Sidebar -->
-    <?php include('../includes/sidebar.php'); ?>
+    <?php include 'partials/sidebar.php'; ?>
 
     <!-- Conteúdo principal -->
     <div class="content">
@@ -248,5 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </div>
 
+    <?php include 'partials/footer.php'; ?>
 </body>
 </html>

@@ -3,7 +3,7 @@ session_start();
 
 // Redireciona caso o usuário já esteja logado
 if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    header('Location: /../dashboard/dashboard.php');
     exit();
 }
 
@@ -22,7 +22,7 @@ if (isset($_SESSION['login_error'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../assets/css/Login-style.css">
+    <link rel="stylesheet" href="../public/assets/css/Login-style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
