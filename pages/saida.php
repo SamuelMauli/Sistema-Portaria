@@ -12,14 +12,21 @@ require_once('../includes/db.php');
 // Conexão com o banco de dados
 $conn = conectarBancoDeDados();
 
-// Consulta entradas sem saída registrada
-$entradas_sem_saida = $conn->query("SELECT id, motorista_id FROM entradas_saidas WHERE data_saida IS NULL");
+// Consulta entradas sem saída registrada, agora selecionando o nome do motorista
+$entradas_sem_saida = $conn->query("
+    SELECT es.id, m.nome AS motorista_nome 
+    FROM entradas_saidas es
+    JOIN motoristas m ON es.motorista_id = m.id
+    WHERE es.data_saida IS NULL
+");
 
-// Consulta visitas com salas ocupadas
-$visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_nome 
-                                  FROM agenda_visitas av 
-                                  JOIN sala_aeb s ON av.sala_aeb_id = s.id 
-                                  WHERE av.hora_visita_saida IS NULL");
+$visitas_ocupadas = $conn->query("
+    SELECT s.id, s.nome AS sala_nome 
+    FROM salas s 
+    WHERE s.ocupada = 1
+");
+
+
 ?>
 
 <!DOCTYPE html>
@@ -28,130 +35,97 @@ $visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_n
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Saída - Sistema de Portaria</title>
-
-    <!-- Conectando o CSS principal -->
     <link rel="stylesheet" href="../assets/css/style.css">
-
-    <!-- Estilo adicional para a página -->
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
+        .container-saidas {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-top: 20px;
-        }
-        h2 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 20px;
+            height: 100vh;
+            padding: 0 20px;
+            flex-wrap: wrap;
         }
         .form-container {
             background-color: white;
-            width: 100%;
-            max-width: 800px;
+            width: 80%;
+            max-width: 400px;
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 16px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 40px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            font-size: 16px;
-            color: #333;
-            display: block;
-            margin-bottom: 8px;
-        }
-        select, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #218838;
+            margin: 50px;
         }
         .error-message {
-            color: #e74c3c;
-            font-size: 14px;
+            color: red;
+            margin-top: 10px;
+        }
+        .success-message {
+            color: green;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <?php include('../includes/sidebar.php'); ?>
 
-<div class="container">
-    <?php include('../includes/sidebar.php'); ?>
-
-    <main class="container-saidas">
-        <!-- Formulário para registrar saída de entrada -->
-        <div class="form-container">
-            <h2>Registrar Saída de Entrada</h2>
-            <form action="../actions/registrar_saida.php" method="post">
-                <div class="input-group">
-                    <label for="entrada_id">Selecione a entrada sem saída registrada:</label>
-                    <select name="entrada_id" id="entrada_id" required>
-                        <option value="">Selecione uma entrada</option>
-                        <?php while ($row = $entradas_sem_saida->fetch_assoc()): ?>
-                            <option value="<?php echo htmlspecialchars($row['id']); ?>">
-                                Entrada de Motorista ID: <?php echo htmlspecialchars($row['motorista_id']); ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-                <button type="submit">Registrar Saída</button>
-                <?php if (isset($_SESSION['erro_saida'])): ?>
-                    <div class="error-message">
-                        <?php echo $_SESSION['erro_saida']; ?>
+        <main class="container-saidas">
+            <!-- Formulário para registrar saída de entrada -->
+            <div class="form-container">
+                <h2>Registrar Saída de Entrada</h2>
+                <form action="../actions/registrar_saida.php" method="post">
+                    <div class="input-group">
+                        <label for="id_saida">Selecione a entrada sem saída registrada:</label>
+                        <select name="id_saida" id="id_saida" required>
+                            <option value="">Selecione uma entrada</option>
+                            <?php while ($row = $entradas_sem_saida->fetch_assoc()): ?>
+                                <option value="<?= $row['id'] ?>">Motorista: <?= $row['motorista_nome'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
-                    <?php unset($_SESSION['erro_saida']); ?>
-                <?php endif; ?>
-            </form>
-        </div>
-
-        <!-- Formulário para liberar sala de visitas -->
-        <div class="form-container">
-            <h2>Liberar Sala de Visitas</h2>
-            <form action="../actions/registrar_saida.php" method="post">
-                <div class="input-group">
-                    <label for="visita_id">Selecione a visita para liberar a sala:</label>
-                    <select name="visita_id" id="visita_id" required>
-                        <option value="">Selecione uma visita</option>
-                        <?php while ($row = $visitas_ocupadas->fetch_assoc()): ?>
-                            <option value="<?php echo htmlspecialchars($row['id']); ?>">
-                                Sala: <?php echo htmlspecialchars($row['sala_nome']); ?> (Visita ID: <?php echo htmlspecialchars($row['id']); ?>)
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-                <button type="submit">Liberar Sala</button>
-                <?php if (isset($_SESSION['erro_visita'])): ?>
-                    <div class="error-message">
-                        <?php echo $_SESSION['erro_visita']; ?>
+                    <div class="input-group">
+                        <label for="hora_saida">Hora de Saída:</label>
+                        <input type="time" name="hora_saida" id="hora_saida" required>
                     </div>
-                    <?php unset($_SESSION['erro_visita']); ?>
-                <?php endif; ?>
-            </form>
-        </div>
-    </main>
-</div>
+                    <button type="submit" name="registrar_saida">Registrar Saída</button>
+                    <?php if (isset($_SESSION['erro_saida'])): ?>
+                        <div class="error-message"><?= $_SESSION['erro_saida'] ?></div>
+                        <?php unset($_SESSION['erro_saida']); ?>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['sucesso_saida'])): ?>
+                        <div class="success-message"><?= $_SESSION['sucesso_saida'] ?></div>
+                        <?php unset($_SESSION['sucesso_saida']); ?>
+                    <?php endif; ?>
+                </form>
+            </div>
 
-<?php include('../includes/footer.php'); ?>
+            <!-- Formulário para liberar sala de visitas -->
+            <div class="form-container">
+                <h2>Liberar Sala de Visitas</h2>
+                <form action="../actions/registrar_saida.php" method="post">
+                    <div class="input-group">
+                        <label for="visita_id">Selecione a visita para liberar a sala:</label>
+                        <select name="visita_id" id="visita_id" required>
+                            <option value="">Selecione uma visita</option>
+                            <?php while ($row = $visitas_ocupadas->fetch_assoc()): ?>
+                                <option value="<?= $row['id'] ?>">Sala: <?= $row['sala_nome'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <button type="submit" name="liberar_sala">Liberar Sala</button>
+                    <?php if (isset($_SESSION['erro_liberar'])): ?>
+                        <div class="error-message"><?= $_SESSION['erro_liberar'] ?></div>
+                        <?php unset($_SESSION['erro_liberar']); ?>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['sucesso_liberar'])): ?>
+                        <div class="success-message"><?= $_SESSION['sucesso_liberar'] ?></div>
+                        <?php unset($_SESSION['sucesso_liberar']); ?>
+                    <?php endif; ?>
+                </form>
+            </div>
 
+        </main>
+    </div>
+
+    <?php include('../includes/footer.php'); ?>
 </body>
 </html>

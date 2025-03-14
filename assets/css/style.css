@@ -203,6 +203,21 @@ input[type="text"], input[type="password"] {
     font-size: 16px;
 }
 
+select {
+    width: 100%; /* O select ocupar? 100% da largura dispon?vel */
+    padding: 10px;
+    margin-bottom: 5px; /* Margem inferior reduzida */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+select:focus {
+    border-color: #4a90e2; /* Mudando a cor da borda ao focar no select */
+    outline: none; /* Remove o contorno padr?o ao focar */
+}
+
+
 button[type="submit"] {
     background-color: #007BFF;
     color: white;

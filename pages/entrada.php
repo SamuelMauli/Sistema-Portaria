@@ -52,7 +52,6 @@ if (!$conn) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $motorista_id = !empty($_POST['motorista_id']) ? sanitize_input($_POST['motorista_id']) : null;
     $transportadora_id = !empty($_POST['transportadora_id']) ? sanitize_input($_POST['transportadora_id']) : null;
@@ -70,12 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $data_entrada = date('Y-m-d H:i:s');
         $local_entrada_id = 1;
 
+        // Incluindo transportadora_id na consulta SQL
         $stmt = $conn->prepare("INSERT INTO entradas_saidas 
-            (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, placa_veiculo, observacao, ajudante_nome, ajudante_doc) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-        $stmt->bind_param("iiissssss", $motorista_id, $finalidade_id, $local_entrada_id, $responsavel_id, $data_entrada, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc);
-
+            (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, placa_veiculo, observacao, ajudante_nome, ajudante_doc, transportadora_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        // Alterando bind_param para incluir transportadora_id
+        $stmt->bind_param("iiisssssss", $motorista_id, $finalidade_id, $local_entrada_id, $funcionarios_id, $data_entrada, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc, $transportadora_id);
+        
         if ($stmt->execute()) {
             $success_message = "Entrada registrada com sucesso!";
         } else {
@@ -85,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     }
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -166,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         /* Botão estilizado */
         button {
             padding: 15px;
-            background-color: #28a745;
+            background-color: #3498db;
             color: white;
             border: none;
             cursor: pointer;
