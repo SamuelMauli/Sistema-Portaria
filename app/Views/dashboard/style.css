@@ -1,0 +1,286 @@
+/* Estilos gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* Barra lateral (sidebar) */
+.sidebar {
+    width: 250px; /* Largura fixa da sidebar */
+    background-color: #00052c; /* Azul escuro */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinhamento à esquerda */
+    padding: 20px 10px; /* Padding com menos espaço horizontal */
+    position: fixed; /* Fixar a sidebar na tela */
+    top: 0; /* Começa no topo */
+    left: 0; /* Fixa no lado esquerdo */
+    height: 100%; /* Altura da sidebar igual à altura da janela de visualização */
+    transition: width 0.3s; /* Transição suave ao expandir/retrair */
+    z-index: 1000; /* Garante que a sidebar fique acima do conteúdo principal */
+}
+
+.sidebar.expanded {
+    width: 250px; /* Largura expandida */
+}
+
+.sidebar.collapsed {
+    width: 60px; /* Largura colapsada */
+}
+
+/* Bot�o de altern�ncia */
+.toggle-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Logo */
+.sidebar .logo img {
+    width: 100%; /* A logo ocupa toda a largura dispon�vel */
+    max-width: 150px; /* Limita o tamanho m�ximo */
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/* Menu de navega��o */
+.nav-menu {
+    width: 100%;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.nav-menu li {
+    width: 100%;
+    text-align: left; /* Alinhamento � esquerda */
+}
+
+.nav-menu li a {
+    display: flex; /* Usar flexbox para alinhar �cones e texto */
+    align-items: center; /* Alinha verticalmente os �cones */
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #ffffff; /* Ligeira mudan�a na borda */
+    transition: background-color 0.3s; /* Transi��o suave */
+}
+
+.nav-menu li a i {
+    margin-right: 10px; /* Espa�amento entre �cone e texto */
+}
+
+.nav-menu li a:hover {
+    background-color: #003c60; /* Azul mais claro ao passar o mouse */
+}
+
+/* Esconder o texto quando colapsado */
+.sidebar.collapsed .menu-text {
+    display: none;
+}
+
+/* Mostrar o �cone */
+.sidebar.collapsed i {
+    margin: 0 auto;
+}
+
+/* Rodap� */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #00052c; /* Azul */
+    color: white;
+    position: relative; /* Posicionamento relativo para se ajustar � sidebar */
+    left: 0;
+    width: 100%; /* O footer ocupa toda a largura da p�gina */
+}
+
+
+.container-cadastro {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    position: relative;
+    margin-left: 0; /* Espa�o para a sidebar */
+}
+/* Conte�do principal para sa�das */
+.container-saidas {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+/* Container de sa�da e visitas */
+.saida-container, .visitas-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 48%; /* Dividem o espa�o 50% cada uma, com um pequeno espa�amento */
+}
+
+/* Estilo para os formul�rios */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px; /* Margem inferior para espa�amento */
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.nav-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Para que todos os bot�es ocupem espa�o igual */
+    margin: 0 5px; /* Margem lateral para espa�amento */
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+.formulario-cadastro {
+    display: none;
+    margin-top: 20px; /* Margem superior para espa�amento entre nav e formul�rio */
+}
+
+.input-group {
+    display: flex; /* Utiliza flexbox para alinhar os inputs */
+    justify-content: space-between; /* Distribui o espa�o igualmente entre os inputs */
+    margin-bottom: 10px; /* Margem inferior reduzida para espa�amento */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%; /* Cada input ocupar� 100% de largura dispon�vel */
+    padding: 10px;
+    margin-bottom: 5px; /* Margem inferior reduzida */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-button {
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove a margem esquerda em telas pequenas */
+    }
+
+    .input-group {
+        flex-direction: column; /* Muda a dire��o dos inputs para coluna em telas pequenas */
+    }
+
+    input[type="text"], input[type="password"] {
+        width: 100%; /* Inputs ocupam 100% da largura em telas pequenas */
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .nav-menu li a {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .sidebar .logo img {
+        max-width: 120px; /* Ajusta a logo para telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .main-content {
+        padding-top: 150px; /* Para compensar a barra lateral quando horizontal */
+    }
+
+    footer {
+        left: 0;
+        width: 100%;
+        position: relative; /* Ajusta a posi��o para rodap� em telas menores */
+    }
+}

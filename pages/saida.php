@@ -10,15 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 require_once('../includes/db.php');
 
 // Conexão com o banco de dados
-$conn = getConnection();
+$conn = conectarBancoDeDados();
 
 // Consulta entradas sem saída registrada
 $entradas_sem_saida = $conn->query("SELECT id, motorista_id FROM entradas_saidas WHERE data_saida IS NULL");
 
 // Consulta visitas com salas ocupadas
-$visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_nome 
+$visitas_ocupadas = $conn->query("SELECT av.id, av.id, s.nome AS sala_nome 
                                   FROM agenda_visitas av 
-                                  JOIN sala_aeb s ON av.sala_aeb_id = s.id 
+                                  JOIN salas s ON av.id = s.id 
                                   WHERE av.hora_visita_saida IS NULL");
 ?>
 
@@ -42,7 +42,6 @@ $visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_n
         }
         .container {
             display: flex;
-            flex-direction: column;
             align-items: center;
             margin-top: 20px;
         }
@@ -95,10 +94,11 @@ $visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_n
 </head>
 <body>
 
-<div class="container">
-    <?php include('../includes/sidebar.php'); ?>
+
 
     <main class="container-saidas">
+    <?php include('../includes/sidebar.php'); ?>
+
         <!-- Formulário para registrar saída de entrada -->
         <div class="form-container">
             <h2>Registrar Saída de Entrada</h2>
@@ -149,7 +149,6 @@ $visitas_ocupadas = $conn->query("SELECT av.id, av.sala_aeb_id, s.nome AS sala_n
             </form>
         </div>
     </main>
-</div>
 
 <?php include('../includes/footer.php'); ?>
 

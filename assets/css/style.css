@@ -22,10 +22,10 @@ html, body {
     background-color: #00052c; /* Azul escuro */
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinhamento à esquerda */
-    padding: 20px 10px; /* Padding com menos espaço horizontal */
-    position: relative; /* Para que o footer não a sobreponha */
-    transition: width 0.3s; /* Transição suave ao expandir/retrair */
+    align-items: flex-start; /* Alinhamento ï¿½ esquerda */
+    padding: 20px 10px; /* Padding com menos espaï¿½o horizontal */
+    position: relative; /* Para que o footer nï¿½o a sobreponha */
+    transition: width 0.3s; /* Transiï¿½ï¿½o suave ao expandir/retrair */
 }
 
 .sidebar.expanded {
@@ -36,7 +36,7 @@ html, body {
     width: 60px; /* Largura colapsada */
 }
 
-/* Botão de alternância */
+/* Botï¿½o de alternï¿½ncia */
 .toggle-button {
     background: none;
     border: none;
@@ -51,13 +51,13 @@ html, body {
 
 /* Logo */
 .sidebar .logo img {
-    width: 100%; /* A logo ocupa toda a largura disponível */
-    max-width: 150px; /* Limita o tamanho máximo */
+    width: 100%; /* A logo ocupa toda a largura disponï¿½vel */
+    max-width: 150px; /* Limita o tamanho mï¿½ximo */
     margin-bottom: 20px;
     align-items: center;
 }
 
-/* Menu de navegação */
+/* Menu de navegaï¿½ï¿½o */
 .nav-menu {
     width: 100%;
 }
@@ -70,23 +70,23 @@ html, body {
 
 .nav-menu li {
     width: 100%;
-    text-align: left; /* Alinhamento à esquerda */
+    text-align: left; /* Alinhamento ï¿½ esquerda */
 }
 
 .nav-menu li a {
-    display: flex; /* Usar flexbox para alinhar ícones e texto */
-    align-items: center; /* Alinha verticalmente os ícones */
+    display: flex; /* Usar flexbox para alinhar ï¿½cones e texto */
+    align-items: center; /* Alinha verticalmente os ï¿½cones */
     padding: 15px;
     color: white;
     text-decoration: none;
     font-size: 16px;
     font-weight: bold;
-    border-bottom: 1px solid #ffffff; /* Ligeira mudança na borda */
-    transition: background-color 0.3s; /* Transição suave */
+    border-bottom: 1px solid #ffffff; /* Ligeira mudanï¿½a na borda */
+    transition: background-color 0.3s; /* Transiï¿½ï¿½o suave */
 }
 
 .nav-menu li a i {
-    margin-right: 10px; /* Espaçamento entre ícone e texto */
+    margin-right: 10px; /* Espaï¿½amento entre ï¿½cone e texto */
 }
 
 .nav-menu li a:hover {
@@ -98,20 +98,20 @@ html, body {
     display: none;
 }
 
-/* Mostrar o ícone */
+/* Mostrar o ï¿½cone */
 .sidebar.collapsed i {
     margin: 0 auto;
 }
 
-/* Rodapé */
+/* Rodapï¿½ */
 footer {
     text-align: center;
     padding: 10px;
     background-color: #00052c; /* Azul */
     color: white;
-    position: relative; /* Posicionamento relativo para se ajustar à sidebar */
+    position: relative; /* Posicionamento relativo para se ajustar ï¿½ sidebar */
     left: 0;
-    width: 100%; /* O footer ocupa toda a largura da página */
+    width: 100%; /* O footer ocupa toda a largura da pï¿½gina */
 }
 
 
@@ -122,9 +122,9 @@ footer {
     padding: 20px;
     width: 100%;
     position: relative;
-    margin-left: 0; /* Espaço para a sidebar */
+    margin-left: 0; /* Espaï¿½o para a sidebar */
 }
-/* Conteúdo principal para saídas */
+/* Conteï¿½do principal para saï¿½das */
 .container-saidas {
     display: flex;
     justify-content: space-between;
@@ -133,16 +133,16 @@ footer {
     background-color: #f9f9f9;
 }
 
-/* Container de saída e visitas */
+/* Container de saï¿½da e visitas */
 .saida-container, .visitas-container {
     background-color: white;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    width: 48%; /* Dividem o espaço 50% cada uma, com um pequeno espaçamento */
+    width: 48%; /* Dividem o espaï¿½o 50% cada uma, com um pequeno espaï¿½amento */
 }
 
-/* Estilo para os formulários */
+/* Estilo para os formulï¿½rios */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -152,7 +152,7 @@ footer {
 h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px; /* Margem inferior para espaçamento */
+    margin-bottom: 20px; /* Margem inferior para espaï¿½amento */
 }
 
 .nav-buttons {
@@ -169,8 +169,8 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    flex: 1; /* Para que todos os botões ocupem espaço igual */
-    margin: 0 5px; /* Margem lateral para espaçamento */
+    flex: 1; /* Para que todos os botï¿½es ocupem espaï¿½o igual */
+    margin: 0 5px; /* Margem lateral para espaï¿½amento */
 }
 
 .nav-button:hover {
@@ -179,13 +179,13 @@ h2 {
 
 .formulario-cadastro {
     display: none;
-    margin-top: 20px; /* Margem superior para espaçamento entre nav e formulário */
+    margin-top: 20px; /* Margem superior para espaï¿½amento entre nav e formulï¿½rio */
 }
 
 .input-group {
     display: flex; /* Utiliza flexbox para alinhar os inputs */
-    justify-content: space-between; /* Distribui o espaço igualmente entre os inputs */
-    margin-bottom: 10px; /* Margem inferior reduzida para espaçamento */
+    justify-content: space-between; /* Distribui o espaï¿½o igualmente entre os inputs */
+    margin-bottom: 10px; /* Margem inferior reduzida para espaï¿½amento */
 }
 
 label {
@@ -195,28 +195,12 @@ label {
 }
 
 input[type="text"], input[type="password"] {
-    width: 100%; /* Cada input ocupará 100% de largura disponível */
+    width: 100%; /* Cada input ocuparï¿½ 100% de largura disponï¿½vel */
     padding: 10px;
     margin-bottom: 5px; /* Margem inferior reduzida */
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-}
-
-button[type="submit"] {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    font-size: 16px;
-}
-
-button[type="submit"]:hover {
-    background-color: #218838;
 }
 
 /* Responsividade */
@@ -237,7 +221,7 @@ button[type="submit"]:hover {
     }
 
     .input-group {
-        flex-direction: column; /* Muda a direção dos inputs para coluna em telas pequenas */
+        flex-direction: column; /* Muda a direï¿½ï¿½o dos inputs para coluna em telas pequenas */
     }
 
     input[type="text"], input[type="password"] {
@@ -276,6 +260,6 @@ button[type="submit"]:hover {
     footer {
         left: 0;
         width: 100%;
-        position: relative; /* Ajusta a posição para rodapé em telas menores */
+        position: relative; /* Ajusta a posiï¿½ï¿½o para rodapï¿½ em telas menores */
     }
 }

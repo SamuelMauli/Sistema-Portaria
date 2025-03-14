@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    $conn = getConnection();
-    $stmt = $conn->prepare("SELECT id, nome, senha FROM usuarios WHERE nome = ?");
+    $conn = conectarBancoDeDados();
+    $stmt = $conn->prepare("SELECT id, login, senha FROM usuarios WHERE login = ?");
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (password_verify($password, $user['senha'])) {
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['nome'];
+            $_SESSION['username'] = $user['login'];
             header('Location: ../pages/dashboard.php');
             exit();
         } else {

@@ -16,12 +16,12 @@ function criarBancoDeDados() {
         }
 
         // Cria o banco de dados se ele não existir
-        $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
-        if ($conn->query($sql)) {
-            echo "Banco de dados criado ou já existente: " . DB_NAME . "<br>";
-        } else {
-            throw new Exception("Erro ao criar o banco de dados: " . $conn->error);
-        }
+        // $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
+        // if ($conn->query($sql)) {
+        //     echo "Banco de dados criado ou já existente: " . DB_NAME . "<br>";
+        // } else {
+        //     throw new Exception("Erro ao criar o banco de dados: " . $conn->error);
+        // }
 
         // Fecha a conexão temporária
         $conn->close();
