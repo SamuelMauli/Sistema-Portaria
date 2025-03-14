@@ -7,40 +7,74 @@ if (!isset($_SESSION['user_id'])) {
 
 include('../includes/db.php');
 
-// Função para sanitizar dados de entrada
 function sanitize_input($data) {
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitizar e validar as entradas
-    $motorista_id = isset($_POST['motorista_id']) ? sanitize_input($_POST['motorista_id']) : null;
-    $transportadora_id = isset($_POST['transportadora_id']) ? sanitize_input($_POST['transportadora_id']) : null;
-    $placa_veiculo = isset($_POST['placa_veiculo']) ? sanitize_input($_POST['placa_veiculo']) : null;
-    $finalidade_id = isset($_POST['finalidade_id']) ? sanitize_input($_POST['finalidade_id']) : null;
-    $ajudante_nome = isset($_POST['ajudante_nome']) ? sanitize_input($_POST['ajudante_nome']) : null;
-    $ajudante_doc = isset($_POST['ajudante_doc']) ? sanitize_input($_POST['ajudante_doc']) : null;
-    $responsavel_id = isset($_POST['responsavel_id']) ? sanitize_input($_POST['responsavel_id']) : null;
-    $observacao = isset($_POST['observacao']) ? sanitize_input($_POST['observacao']) : null;
+// Buscar transportadoras e finalidades do banco de dados
+$transportadoras = [];
+$finalidades = [];
 
-    // Validar os campos obrigatórios
-    if (!$motorista_id || !$placa_veiculo || !$finalidade_id || !$responsavel_id) {
+$sql_transportadoras = "SELECT id, nome FROM transportadoras";
+$result_transportadoras = $conn->query($sql_transportadoras);
+if ($result_transportadoras->num_rows > 0) {
+    while ($row = $result_transportadoras->fetch_assoc()) {
+        $transportadoras[] = $row;
+    }
+}
+
+$sql_motoristas = "SELECT id, nome FROM motoristas";
+$result_motoristas = $conn->query($sql_motoristas);
+if ($result_motoristas->num_rows > 0) {
+    while ($row = $result_motoristas->fetch_assoc()) {
+        $motoristas[] = $row;
+    }
+}
+
+$sql_funcionarios = "SELECT id, nome FROM funcionarios";
+$result_funcionarios = $conn->query($sql_funcionarios);
+if ($result_funcionarios->num_rows > 0) {
+    while ($row = $result_funcionarios->fetch_assoc()) {
+        $funcionarios[] = $row;
+    }
+}
+
+$sql_finalidades = "SELECT id, descricao FROM finalidades";
+$result_finalidades = $conn->query($sql_finalidades);
+if ($result_finalidades->num_rows > 0) {
+    while ($row = $result_finalidades->fetch_assoc()) {
+        $finalidades[] = $row;
+    }
+}
+
+
+if (!$conn) {
+    die("Erro de conexão: " . $conn->connect_error);
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $motorista_id = !empty($_POST['motorista_id']) ? sanitize_input($_POST['motorista_id']) : null;
+    $transportadora_id = !empty($_POST['transportadora_id']) ? sanitize_input($_POST['transportadora_id']) : null;
+    $placa_veiculo = !empty($_POST['placa_veiculo']) ? sanitize_input($_POST['placa_veiculo']) : null;
+    $finalidade_id = !empty($_POST['finalidade_id']) ? sanitize_input($_POST['finalidade_id']) : null;
+    $ajudante_nome = !empty($_POST['ajudante_nome']) ? sanitize_input($_POST['ajudante_nome']) : null;
+    $ajudante_doc = !empty($_POST['ajudante_doc']) ? sanitize_input($_POST['ajudante_doc']) : null;
+    $funcionarios_id = !empty($_POST['funcionarios_id']) ? sanitize_input($_POST['funcionarios_id']) : null;
+    $observacao = !empty($_POST['observacao']) ? sanitize_input($_POST['observacao']) : null;
+    $local_entrada_id = !empty($_POST['local_entrada_id']) ? sanitize_input($_POST['local_entrada_id']) : null;
+
+    if (empty($motorista_id) || empty($transportadora_id) || empty($placa_veiculo) || empty($finalidade_id) || empty($funcionarios_id)) {
         $error_message = "Todos os campos obrigatórios devem ser preenchidos!";
     } else {
-        // Pega a data e hora atual
         $data_entrada = date('Y-m-d H:i:s');
-        $data_saida = null; // A data de saída será registrada posteriormente
-
-        // Preparar a consulta SQL para inserção
-        $stmt = $conn->prepare("INSERT INTO entradas_saidas 
-            (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, data_saida, placa_veiculo, observacao, ajudante_nome, ajudante_doc) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-        // Definir 'local_entrada_id' fixo como exemplo, deve ser alterado conforme necessário
         $local_entrada_id = 1;
 
-        // Vincular os parâmetros para a consulta
-        $stmt->bind_param("iiisssssss", $motorista_id, $finalidade_id, $local_entrada_id, $responsavel_id, $data_entrada, $data_saida, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc);
+        $stmt = $conn->prepare("INSERT INTO entradas_saidas 
+            (motorista_id, finalidade_id, local_entrada_id, responsavel_aeb_id, data_entrada, placa_veiculo, observacao, ajudante_nome, ajudante_doc) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        $stmt->bind_param("iiissssss", $motorista_id, $finalidade_id, $local_entrada_id, $responsavel_id, $data_entrada, $placa_veiculo, $observacao, $ajudante_nome, $ajudante_doc);
 
         if ($stmt->execute()) {
             $success_message = "Entrada registrada com sucesso!";
@@ -51,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -60,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Entrada - Sistema de Portaria</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         /* Reset básico */
@@ -178,75 +213,112 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
-
 <div class="container">
-    <!-- Sidebar -->
     <?php include('../includes/sidebar.php'); ?>
-
-    <!-- Conteúdo principal -->
     <div class="content">
         <h2>Registrar Entrada</h2>
-
-        <!-- Mensagens de sucesso ou erro -->
-        <?php if (isset($success_message)): ?>
-            <div class="message success"><?= $success_message ?></div>
-        <?php elseif (isset($error_message)): ?>
-            <div class="message error"><?= $error_message ?></div>
-        <?php endif; ?>
-
-        <form method="POST" action="dashboard.php">
-            <!-- Motorista -->
+        <?php if (isset($success_message)) echo "<div class='message success'>$success_message</div>"; ?>
+        <?php if (isset($error_message)) echo "<div class='message error'>$error_message</div>"; ?>
+        
+        <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
             <div class="input-group">
-                <label for="motorista_id">Motorista (ID):</label>
-                <input type="number" id="motorista_id" name="motorista_id" required>
+                <label for="motorista_id">Motorista:</label>
+                <select id="motorista_id" name="motorista_id" required>
+                    <option value="">Selecione um motorista</option>
+                    <?php foreach ($motoristas as $motorista): ?>
+                        <option value="<?= $motorista['id'] ?>"><?= $motorista['nome'] ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <!-- Transportadora -->
             <div class="input-group">
-                <label for="transportadora_id">Transportadora (ID):</label>
-                <input type="number" id="transportadora_id" name="transportadora_id">
+                <label for="transportadora_id">Transportadora:</label>
+                <select id="transportadora_id" name="transportadora_id" required>
+                    <option value="">Selecione uma Transportadora</option>
+                    <?php foreach ($transportadoras as $transportadora): ?>
+                        <option value="<?= $transportadora['id'] ?>"><?= $transportadora['nome'] ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <!-- Veículo -->
             <div class="input-group">
                 <label for="placa_veiculo">Placa Veículo:</label>
                 <input type="text" id="placa_veiculo" name="placa_veiculo" required>
             </div>
-
-            <!-- Finalidade -->
             <div class="input-group">
-                <label for="finalidade_id">Finalidade (ID):</label>
-                <input type="number" id="finalidade_id" name="finalidade_id" required>
+                <label for="finalidade_id">Finalidade:</label>
+                <select id="finalidade_id" name="finalidade_id" required>
+                    <option value="">Selecione uma Finalidade</option>
+                    <?php foreach ($finalidades as $finalidade): ?>
+                        <option value="<?= $finalidade['id'] ?>"><?= $finalidade['descricao'] ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <!-- Ajudante -->
             <div class="input-group">
                 <label for="ajudante_nome">Nome do Ajudante:</label>
                 <input type="text" id="ajudante_nome" name="ajudante_nome">
             </div>
-
             <div class="input-group">
                 <label for="ajudante_doc">Documento do Ajudante:</label>
                 <input type="text" id="ajudante_doc" name="ajudante_doc">
             </div>
-
-            <!-- Responsável -->
             <div class="input-group">
-                <label for="responsavel_id">Responsável AEB:</label>
-                <input type="number" id="responsavel_id" name="responsavel_id" required>
+                <label for="funcionarios_id">Responsável AEB:</label>
+                <select id="funcionarios_id" name="funcionarios_id" required>
+                    <option value="">Selecione um Responsavel AEB</option>
+                    <?php foreach ($funcionarios as $funcionarios): ?>
+                        <option value="<?= $funcionarios['id'] ?>"><?= $funcionarios['nome'] ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <!-- Observações -->
             <div class="input-group">
                 <label for="observacao">Observação:</label>
                 <input type="text" id="observacao" name="observacao">
             </div>
-
-            <!-- Botão de envio -->
+            <div class="input-group">
+                <label for="local_entrada_id">Local de Entrada:</label>
+                <select id="local_entrada_id" name="local_entrada_id" required>
+                    <option value="">Selecione um Local</option>
+                    <?php
+                    // Buscar locais de entrada do banco de dados
+                    $sql_locais = "SELECT id, nome FROM local_entrada";
+                    $result_locais = $conn->query($sql_locais);
+                    if ($result_locais->num_rows > 0) {
+                        while ($row = $result_locais->fetch_assoc()) {
+                            echo "<option value='{$row['id']}'>{$row['nome']}</option>";
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
             <button type="submit">Registrar Entrada</button>
         </form>
     </div>
 </div>
-
+<script>
+    // $(document).ready(function() {
+    //     function buscarDados(idCampo, url, campoDestino) {
+    //         $(idCampo).on("input", function() {
+    //             let id = $(this).val();
+    //             if (id !== "") {
+    //                 $.ajax({
+    //                     url: url,
+    //                     method: "POST",
+    //                     data: { id: id },
+    //                     dataType: "json",
+    //                     success: function(response) {
+    //                         $(campoDestino).val(response.nome || response.descricao || "");
+    //                     },
+    //                     error: function() {
+    //                         console.error("Erro ao buscar dados.");
+    //                     }
+    //                 });
+    //             }
+    //         });
+    //     }
+        
+    //     buscarDados("#motorista_id", "buscar_motorista.php", "#motorista_nome");
+    //     buscarDados("#transportadora_id", "buscar_transportadora.php", "#transportadora_nome");
+    //     buscarDados("#finalidade_id", "buscar_finalidade.php", "#finalidade_descricao");
+    // });
+</script>
 </body>
 </html>

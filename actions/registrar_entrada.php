@@ -3,6 +3,25 @@
 session_start();
 require_once('../includes/db.php');
 
+
+$host = 'localhost'; 
+$dbname = 'portaria_db'; 
+$username = 'samuel'; 
+$password = ''; 
+
+
+$sql = "SELECT id, nome FROM transportadoras";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$transportadoras = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Busca todas as finalidades
+$sql = "SELECT id, descricao FROM finalidades";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$finalidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $documento = trim($_POST['documento']);
