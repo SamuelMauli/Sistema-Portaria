@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 // registrar_saida.php
 session_start();
@@ -28,23 +27,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-=======
-<?php
-session_start();
-require_once('../includes/db.php');
-
-$data = $_POST['data'];
-$hora = $_POST['hora'];
-$assunto = $_POST['assunto'];
-
-// Insere a reunião no banco de dados
-$stmt = $conn->prepare("INSERT INTO reunioes (data, hora, assunto) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $data, $hora, $assunto);
-
-if ($stmt->execute()) {
-    echo "Reunião agendada com sucesso!";
-} else {
-    echo "Erro ao agendar reunião.";
-}
-?>
->>>>>>> ccc14c2 (Initial commit)

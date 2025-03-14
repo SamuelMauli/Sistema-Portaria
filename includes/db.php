@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 // Arquivo: includes/db.php
 
@@ -14,14 +13,6 @@ function criarBancoDeDados() {
         // Verifica se a conexão foi bem-sucedida
         if ($conn->connect_error) {
             throw new Exception("Erro ao conectar ao servidor MySQL: " . $conn->connect_error);
-        }
-
-        // Cria o banco de dados se ele não existir
-        $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
-        if ($conn->query($sql)) {
-            echo "Banco de dados criado ou já existente: " . DB_NAME . "<br>";
-        } else {
-            throw new Exception("Erro ao criar o banco de dados: " . $conn->error);
         }
 
         // Fecha a conexão temporária
@@ -71,23 +62,3 @@ $conn = conectarBancoDeDados();
 // ... (operações com o banco de dados)
 // fecharConexao($conn);
 ?>
-=======
-<?php
-function getConnection() {
-    $host = 'localhost';
-    $user = 'root';
-    $password = 'rootB4ll3s0l';
-    $database = 'portaria';
-
-    $conn = new mysqli($host, $user, $password, $database);
-
-    if ($conn->connect_error) {
-        die("Conex�o falhou: " . $conn->connect_error);
-    }
-
-    return $conn;
-}
-
-
-?>
->>>>>>> ccc14c2 (Initial commit)

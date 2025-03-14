@@ -53,14 +53,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['success'] = "Transportadora cadastrada com sucesso!";
         } elseif ($tipoCadastro === 'usuario_sistema') {
             $nome = trim($_POST['nome']);
+            $login = trim($_POST['login']);
             $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-
-            $sql = "INSERT INTO usuarios_sistema (nome, senha) VALUES (:nome, :senha)";
+            $nivel_acesso = $_POST['nivel_acesso']; // Supondo que o nível de acesso seja enviado via POST
+        
+            // Conexão com o banco de dados (exemplo usando PDO)
+            $sql = "INSERT INTO usuarios (nome, login, senha, nivel_acesso) VALUES (:nome, :login, :senha, :nivel_acesso)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':login', $login);
             $stmt->bindParam(':senha', $senha);
+            $stmt->bindParam(':nivel_acesso', $nivel_acesso);
             $stmt->execute();
-            $_SESSION['success'] = "Usuário do sistema cadastrado com sucesso!";
+        
+            $_SESSION['success'] = "Usuário do sistema cadastrado com sucesso!";        
         } elseif ($tipoCadastro === 'visitante') {
             $nome = trim($_POST['nome']);
             $doc_identidade = trim($_POST['doc_identidade']);

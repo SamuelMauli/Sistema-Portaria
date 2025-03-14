@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
@@ -6,8 +5,37 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include('../includes/sidebar.php');
 include('../includes/db.php');
+
+$host = 'localhost'; 
+$dbname = 'portaria_db'; 
+$username = 'samuel'; 
+$password = ''; 
+
+try {
+    // Criando a conexão PDO
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    // Configurando para lançar exceções em caso de erro
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    // Em caso de erro, exibe a mensagem de erro
+    echo "Erro na conexão: " . $e->getMessage();
+    exit;
+}
+
+
+// Busca todas as transportadoras
+$sql = "SELECT id, nome FROM transportadoras";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$transportadoras = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Busca todas as finalidades
+$sql = "SELECT id, descricao FROM finalidades";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$finalidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipoCadastro = $_POST['tipoCadastro'];
@@ -45,13 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['success'] = "Transportadora cadastrada com sucesso!";
         } elseif ($tipoCadastro === 'usuario_sistema') {
             $nome = trim($_POST['nome']);
+            $login = trim($_POST['login']);
             $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-
-            $sql = "INSERT INTO usuarios_sistema (nome, senha) VALUES (?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $nome, $senha);
+            $nivel_acesso = $_POST['nivel_acesso']; // Supondo que o nível de acesso seja enviado via POST
+        
+            // Conexão com o banco de dados (exemplo usando PDO)
+            $sql = "INSERT INTO usuarios (nome, login, senha, nivel_acesso) VALUES (:nome, :login, :senha, :nivel_acesso)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':login', $login);
+            $stmt->bindParam(':senha', $senha);
+            $stmt->bindParam(':nivel_acesso', $nivel_acesso);
             $stmt->execute();
-            $_SESSION['success'] = "Usuário do sistema cadastrado com sucesso!";
+        
+            $_SESSION['success'] = "Usuário do sistema cadastrado com sucesso!";        
         } elseif ($tipoCadastro === 'visitante') {
             $nome = trim($_POST['nome']);
             $doc_identidade = trim($_POST['doc_identidade']);
@@ -85,14 +120,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        /* Reset & Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+            padding: 20px;
+            margin: 0;
+            padding: 0;
+            position: center;
+        }
+
+        /* Container que envolve sidebar e o conteúdo do cadastro */
+        .container {
+            display: flex;
+            margin-right:200px;
+
+        }
+
+
+
+        /* Área de conteúdo do cadastro */
+        .container-cadastro {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            transition: margin-left 0.3s ease;
+            margin-right:0;
+            margin-right:200px;
+        }
+
+        /* Cabeçalho */
+        h2 {
+            text-align: center;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        /* Botões de navegação */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container-cadastro {
+                margin-left: 0; /* Remove a margem em telas menores */
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+
+
+    </style>
 </head>
 <body>
-    <div class="container">
-        <?php include('../includes/sidebar.php'); ?>
+    <?php include('../includes/sidebar.php'); ?>
 
+    </div>
+
+    <div class="container">
         <div class="container-cadastro">
             <h2>Cadastro</h2>
-            <p style="text-align: center;">Clique em uma das opções abaixo para cadastrar:</p>
+            <p>Clique em uma das opções abaixo para cadastrar:</p>
 
             <?php if (isset($_SESSION['success'])): ?>
                 <div class="success-message"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
@@ -110,263 +250,158 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button class="nav-button" data-form="form-visitante">Visitante</button>
             </div>
 
-            <!-- Formulários de cadastro -->
-            <?php include('forms/cadastro_forms.php'); ?>
-        </div>
-    </div>
+            <!-- Formulário do Funcionário -->
+            <div id="form-funcionario" class="form-section" style="display:none;">
+                <h4>Cadastro de Funcionário</h4>
+                <form method="POST" action="cadastro.php">
+                    <input type="hidden" name="tipoCadastro" value="funcionario">
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="telefone" name="telefone" required>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
 
-    <script>
-        // Lógica para alternar entre os formulários
-        document.querySelectorAll('.nav-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const formId = this.getAttribute('data-form');
-                document.querySelectorAll('.formulario-cadastro').forEach(form => {
-                    form.style.display = (form.id === formId) ? 'block' : 'none';
+           <!-- Formulário do Motorista -->
+            <div id="form-motorista" class="form-section" style="display:none;">
+                <h4>Cadastro de Motorista</h4>
+                <form method="POST" action="cadastro.php">
+                    <input type="hidden" name="tipoCadastro" value="motorista">
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="doc_identidade">Documento de Identidade:</label>
+                        <input type="text" id="doc_identidade" name="doc_identidade" required>
+                    </div>
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="telefone" name="telefone" required>
+                    </div>
+                    <div>
+                        <label for="transportadora_id">Transportadora:</label>
+                        <select id="transportadora_id" name="transportadora_id" required>
+                            <option value="">Selecione uma Transportadora</option>
+                            <?php foreach ($transportadoras as $transportadora): ?>
+                                <option value="<?= $transportadora['id'] ?>"><?= $transportadora['nome'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+
+
+            <!-- Formulário da Transportadora -->
+            <div id="form-transportadora" class="form-section" style="display:none;">
+                <h4>Cadastro de Transportadora</h4>
+                <form method="POST" action="cadastro.php">
+                    <input type="hidden" name="tipoCadastro" value="transportadora">
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="telefone" name="telefone" required>
+                    </div>
+                    <div>
+                        <label for="endereco">Endereço:</label>
+                        <input type="text" id="endereco" name="endereco" required>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+
+            <!-- Formulário do Usuário do Sistema -->
+            <div id="form-usuario_sistema" class="form-section" style="display:none;">
+                <h4>Cadastro de Usuário</h4>
+                <form method="POST" action="cadastro.php">
+                    <input type="hidden" name="tipoCadastro" value="usuario_sistema">
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="login">Login:</label>
+                        <input type="text" id="login" name="login" required>
+                    </div>
+                    <div>
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" name="senha" required>
+                    </div>
+                    <div>
+                        <label for="nivel_acesso">Nível de Acesso:</label>
+                        <select id="nivel_acesso" name="nivel_acesso" required>
+                            <option value="admin">Admin</option>
+                            <option value="porteiro">Porteiro</option>
+                        </select>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+
+            <!-- Formulário do Visitante -->
+            <div id="form-visitante" class="form-section" style="display:none;">
+                <h4>Cadastro de Visitante</h4>
+                <form method="POST" action="cadastro.php">
+                    <input type="hidden" name="tipoCadastro" value="visitante">
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="doc_identidade">Documento de Identidade:</label>
+                        <input type="text" id="doc_identidade" name="doc_identidade" required>
+                    </div>
+                    <div>
+                        <label for="empresa">Empresa:</label>
+                        <input type="text" id="empresa" name="empresa">
+                    </div>
+                    <div>
+                        <label for="veiculo">Veículo:</label>
+                        <input type="text" id="veiculo" name="veiculo">
+                    </div>
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="telefone" name="telefone" required>
+                    </div>
+                    <div>
+                        <label for="finalidade_id">Finalidade:</label>
+                        <select id="finalidade_id" name="finalidade_id" required>
+                            <option value="">Selecione uma Finalidade</option>
+                            <?php foreach ($finalidades as $finalidade): ?>
+                                <option value="<?= $finalidade['id'] ?>"><?= $finalidade['descricao'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+
+
+            <script>
+                document.querySelectorAll('.nav-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Ocultar todos os formulários
+                        document.querySelectorAll('.form-section').forEach(form => {
+                            form.style.display = 'none';
+                        });
+
+                        // Mostrar o formulário correspondente ao botão clicado
+                        const formId = button.getAttribute('data-form');
+                        document.getElementById(formId).style.display = 'block';
+                    });
                 });
-            });
-        });
-    </script>
-</body>
-</html>
-=======
-<?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
-}
+            </script>
 
-require_once('../includes/db.php');
-
-// Fun��o para processar os cadastros de cada tipo
-function processForm($conn) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $tipoCadastro = $_POST['tipoCadastro'];
-
-        switch ($tipoCadastro) {
-            case 'funcionario_aeb':
-                $nome = $_POST['nome'];
-                $telefone = $_POST['telefone'];
-                $stmt = $conn->prepare("INSERT INTO funcionarios_aeb (nome, telefone) VALUES (?, ?)");
-                $stmt->bind_param("ss", $nome, $telefone);
-                $stmt->execute();
-                echo "Funcion�rio AEB cadastrado com sucesso!";
-                break;
-
-            case 'motorista':
-                $nome = $_POST['nome'];
-                $doc_identidade = $_POST['doc_identidade'];
-                $telefone = $_POST['telefone'];
-                $transportadora_id = $_POST['transportadora_id'];
-                $stmt = $conn->prepare("INSERT INTO motoristas (nome, doc_identidade, telefone, transportadora_id) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("sssi", $nome, $doc_identidade, $telefone, $transportadora_id);
-                $stmt->execute();
-                echo "Motorista cadastrado com sucesso!";
-                break;
-
-            case 'transportadora':
-                $nome = $_POST['nome'];
-                $telefone = $_POST['telefone'];
-                $endereco = $_POST['endereco'];
-                $stmt = $conn->prepare("INSERT INTO transportadoras (nome, telefone, endereco) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $nome, $telefone, $endereco);
-                $stmt->execute();
-                echo "Transportadora cadastrada com sucesso!";
-                break;
-
-            case 'usuario_sistema':
-                $nome = $_POST['nome'];
-                $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO usuarios (nome, senha) VALUES (?, ?)");
-                $stmt->bind_param("ss", $nome, $senha);
-                $stmt->execute();
-                echo "Usu�rio do sistema cadastrado com sucesso!";
-                break;
-
-            case 'visitante':
-                $nome = $_POST['nome'];
-                $doc_identidade = $_POST['doc_identidade'];
-                $empresa = $_POST['empresa'];
-                $veiculo = $_POST['veiculo'];
-                $telefone = $_POST['telefone'];
-                $finalidade_id = $_POST['finalidade'];
-                $stmt = $conn->prepare("INSERT INTO visitantes (nome, doc_identidade, empresa, veiculo, telefone, finalidade) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssssi", $nome, $doc_identidade, $empresa, $veiculo, $telefone, finalidade);
-                $stmt->execute();
-                echo "Visitante cadastrado com sucesso!";
-                break;
-        }
-    }
-}
-
-$conn = getConnection();
-processForm($conn);
-?>
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Sistema de Portaria</title>
-
-    <link rel="stylesheet" href="../assets/css/style.css">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.formulario-cadastro').hide();
-            $('#form-funcionario_aeb').show();
-
-            $('.nav-button').click(function() {
-                $('.formulario-cadastro').hide();
-                var formToShow = $(this).data('form');
-                $('#' + formToShow).show();
-            });
-        });
-    </script>
-
-</head>
-<body>
-
-<div class="container">
-    <?php include('../includes/sidebar.php'); ?>
-
-    <div class="container-cadastro">
-        <h2>Cadastro</h2>
-        <p style="text-align: center;">Clique em uma das op��es abaixo para cadastrar:</p>
-
-        <div class="nav-buttons">
-            <button class="nav-button" data-form="form-funcionario_aeb">Funcion�rio AEB</button>
-            <button class="nav-button" data-form="form-motorista">Motorista</button>
-            <button class="nav-button" data-form="form-transportadora">Transportadora</button>
-            <button class="nav-button" data-form="form-usuario_sistema">Usu�rio do Sistema</button>
-            <button class="nav-button" data-form="form-visitante">Visitante</button>
         </div>
-
-        <form id="form-funcionario_aeb" class="formulario-cadastro" method="POST" action="cadastro.php">
-            <h3>Cadastro Funcion�rio AEB</h3>
-            <input type="hidden" name="tipoCadastro" value="funcionario_aeb">
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="telefone">Telefone:</label>
-                    <input type="text" name="telefone" required>
-                </div>
-            </div>
-            <button type="submit">Cadastrar Funcion�rio AEB</button>
-        </form>
-
-        <!-- Cadastro Motorista -->
-        <form id="form-motorista" class="formulario-cadastro" method="POST" action="cadastro.php" style="display:none;">
-            <h3>Cadastro Motorista</h3>
-            <input type="hidden" name="tipoCadastro" value="motorista">
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="doc_identidade">Documento de Identidade:</label>
-                    <input type="text" name="doc_identidade" required>
-                </div>
-            </div>
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="telefone">Telefone:</label>
-                    <input type="text" name="telefone" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="transportadora_id">Transportadora (ID):</label>
-                    <input type="text" name="transportadora_id" required>
-                </div>
-            </div>
-            <button type="submit">Cadastrar Motorista</button>
-        </form>
-
-        <!-- Cadastro Transportadora -->
-        <form id="form-transportadora" class="formulario-cadastro" method="POST" action="cadastro.php" style="display:none;">
-            <h3>Cadastro Transportadora</h3>
-            <input type="hidden" name="tipoCadastro" value="transportadora">
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="telefone">Telefone:</label>
-                    <input type="text" name="telefone" required>
-                </div>
-            </div>
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="endereco">Endere�o:</label>
-                    <input type="text" name="endereco" required>
-                </div>
-            </div>
-            <button type="submit">Cadastrar Transportadora</button>
-        </form>
-
-        <!-- Cadastro Usu�rio de Sistema -->
-        <form id="form-usuario_sistema" class="formulario-cadastro" method="POST" action="cadastro.php" style="display:none;">
-            <h3>Cadastro Usu�rio de Sistema</h3>
-            <input type="hidden" name="tipoCadastro" value="usuario_sistema">
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="senha">Senha:</label>
-                    <input type="password" name="senha" required>
-                </div>
-            </div>
-            <button type="submit">Cadastrar Usu�rio de Sistema</button>
-        </form>
-
-        <!-- Cadastro Visitante -->
-        <form id="form-visitante" class="formulario-cadastro" method="POST" action="cadastro.php" style="display:none;">
-            <h3>Cadastro Visitante</h3>
-            <input type="hidden" name="tipoCadastro" value="visitante">
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="doc_identidade">Documento de Identidade:</label>
-                    <input type="text" name="doc_identidade" required>
-                </div>
-            </div>
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="empresa">Empresa:</label>
-                    <input type="text" name="empresa" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="veiculo">Ve�culo:</label>
-                    <input type="text" name="veiculo">
-                </div>
-            </div>
-            <div class="input-group">
-                <div style="flex: 1; margin-right: 10px;">
-                    <label for="telefone">Telefone:</label>
-                    <input type="text" name="telefone">
-                </div>
-                <div style="flex: 1;">
-                    <label for="finalidade_id">Finalidade (ID):</label>
-                    <input type="text" name="finalidade_id" required>
-                </div>
-            </div>
-            <button type="submit">Cadastrar Visitante</button>
-        </form>
-
     </div>
-</div>
-
 </body>
 </html>
->>>>>>> ccc14c2 (Initial commit)
