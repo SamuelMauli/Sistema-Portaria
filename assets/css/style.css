@@ -26,6 +26,10 @@ html, body {
     padding: 20px 10px; /* Padding com menos espaço horizontal */
     position: relative; /* Para que o footer não a sobreponha */
     transition: width 0.3s; /* Transição suave ao expandir/retrair */
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1; 
 }
 
 .sidebar.expanded {
@@ -110,10 +114,11 @@ footer {
     background-color: #00052c; /* Azul */
     color: white;
     position: relative; /* Posicionamento relativo para se ajustar à sidebar */
+    position: fixed;
+    bottom: 0;
     left: 0;
-    width: 100%; /* O footer ocupa toda a largura da página */
+    width: 100%; 
 }
-
 
 .container-cadastro {
     background-color: white;
@@ -218,6 +223,7 @@ select:focus {
 }
 
 
+
 button[type="submit"] {
     background-color: #007BFF;
     color: white;
@@ -226,8 +232,8 @@ button[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100%;
     font-size: 16px;
+    width: 100%; /* Ocupa 100% da largura dispon?vel */
 }
 
 button[type="submit"]:hover {

@@ -11,7 +11,6 @@ function sanitize_input($data) {
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
-// Buscar transportadoras e finalidades do banco de dados
 $transportadoras = [];
 $finalidades = [];
 
@@ -165,23 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             outline: none;
         }
 
-        /* Botão estilizado */
-        button {
-            padding: 15px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            grid-column: span 2; /* O botão vai ocupar duas colunas no grid */
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
 
-        button:hover {
-            background-color: #218838;
-        }
 
         /* Mensagens de erro e sucesso */
         .message {
@@ -205,11 +188,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         /* Ajustar o layout para telas menores */
         @media (max-width: 768px) {
             form {
-                grid-template-columns: 1fr; /* Todos os elementos em uma coluna */
+                grid-template-columns: 1fr; 
             }
 
             button {
-                grid-column: span 1; /* Botão ocupa toda a largura */
+                grid-column: span 1; 
             }
         }
     </style>
@@ -280,7 +263,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select id="local_entrada_id" name="local_entrada_id" required>
                     <option value="">Selecione um Local</option>
                     <?php
-                    // Buscar locais de entrada do banco de dados
                     $sql_locais = "SELECT id, nome FROM local_entrada";
                     $result_locais = $conn->query($sql_locais);
                     if ($result_locais->num_rows > 0) {
@@ -295,32 +277,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </div>
-<script>
-    // $(document).ready(function() {
-    //     function buscarDados(idCampo, url, campoDestino) {
-    //         $(idCampo).on("input", function() {
-    //             let id = $(this).val();
-    //             if (id !== "") {
-    //                 $.ajax({
-    //                     url: url,
-    //                     method: "POST",
-    //                     data: { id: id },
-    //                     dataType: "json",
-    //                     success: function(response) {
-    //                         $(campoDestino).val(response.nome || response.descricao || "");
-    //                     },
-    //                     error: function() {
-    //                         console.error("Erro ao buscar dados.");
-    //                     }
-    //                 });
-    //             }
-    //         });
-    //     }
-        
-    //     buscarDados("#motorista_id", "buscar_motorista.php", "#motorista_nome");
-    //     buscarDados("#transportadora_id", "buscar_transportadora.php", "#transportadora_nome");
-    //     buscarDados("#finalidade_id", "buscar_finalidade.php", "#finalidade_descricao");
-    // });
-</script>
 </body>
 </html>

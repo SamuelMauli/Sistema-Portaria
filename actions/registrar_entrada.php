@@ -1,5 +1,4 @@
 <?php
-// registrar_entrada.php
 session_start();
 require_once('../includes/db.php');
 
@@ -15,7 +14,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $transportadoras = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Busca todas as finalidades
 $sql = "SELECT id, descricao FROM finalidades";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();

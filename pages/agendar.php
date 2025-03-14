@@ -9,7 +9,7 @@ include('../includes/db.php');
 
 try {
     // Buscar salas disponíveis
-    $query_salas = "SELECT id, nome FROM salas WHERE ocupada = 0";  // Somente salas não ocupadas
+    $query_salas = "SELECT id, nome FROM salas WHERE ocupada = 0";  
     $result_salas = $conn->query($query_salas);
     if (!$result_salas) {
         throw new Exception("Erro ao buscar salas: " . $conn->error);
@@ -79,6 +79,7 @@ try {
             flex: 1;
             padding: 30px;
             background-color: #fff;
+            margin-left: 50px;
         }
 
         .content h2 {
@@ -132,7 +133,6 @@ try {
             min-height: 100px;
         }
 
-        /* Botão estilizado */
         button {
             padding: 15px;
             background-color: #3498db;
@@ -141,7 +141,7 @@ try {
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
-            grid-column: 1 / -1; /* Ocupa todas as colunas */
+            grid-column: 1 / -1; 
             transition: background-color 0.3s ease;
         }
 
@@ -149,7 +149,6 @@ try {
             background-color: #2980b9;
         }
 
-        /* Mensagens de erro e sucesso */
         .message {
             padding: 10px;
             margin-bottom: 20px;
@@ -168,7 +167,6 @@ try {
             color: #721c24;
         }
 
-        /* Ajustar o layout para telas menores */
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
@@ -184,7 +182,7 @@ try {
             }
 
             form {
-                grid-template-columns: 1fr; /* Todos os elementos em uma coluna */
+                grid-template-columns: 1fr; 
             }
         }
     </style>
@@ -245,8 +243,8 @@ try {
 
                 <!-- Responsável AEB -->
                 <div class="input-group">
-                    <label for="funcionarios_id">Responsável AEB:</label>
-                    <select name="funcionarios_id" required>
+                    <label for="responsavel_aeb_id">Responsável AEB:</label>
+                    <select name="responsavel_aeb_id" required>
                         <option value="">Selecione um Responsável AEB</option>
                         <?php while ($funcionario = $result_funcionarios->fetch_assoc()): ?>
                             <option value="<?= $funcionario['id']; ?>"><?= $funcionario['nome']; ?></option>

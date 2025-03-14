@@ -5,7 +5,6 @@ require_once('db.php');
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $tipoCadastro = $_POST['tipoCadastro'];
 
-    // Validação básica
     if (empty($_POST['nome']) || empty($_POST['telefone'])) {
         $_SESSION['error'] = "Nome e telefone são obrigatórios!";
         header('Location: ../pages/cadastro.php');
@@ -55,9 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $nome = trim($_POST['nome']);
             $login = trim($_POST['login']);
             $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-            $nivel_acesso = $_POST['nivel_acesso']; // Supondo que o nível de acesso seja enviado via POST
+            $nivel_acesso = $_POST['nivel_acesso']; 
         
-            // Conexão com o banco de dados (exemplo usando PDO)
             $sql = "INSERT INTO usuarios (nome, login, senha, nivel_acesso) VALUES (:nome, :login, :senha, :nivel_acesso)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':nome', $nome);

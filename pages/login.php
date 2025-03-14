@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Redireciona caso o usuário já esteja logado
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
     exit();
 }
 
-// Verificação e manipulação de erros de login
 if (isset($_SESSION['login_error'])) {
     $login_error = $_SESSION['login_error'];
     unset($_SESSION['login_error']);
@@ -85,7 +83,6 @@ if (isset($_SESSION['login_error'])) {
 </head>
 <body>
 
-<!-- Formulário de Login -->
 <form method="POST" action="../actions/login_action.php">
     <h2>Login</h2>
 
@@ -97,7 +94,6 @@ if (isset($_SESSION['login_error'])) {
 
 <?php include('../includes/footer.php'); ?>
 
-<!-- Exibe a mensagem de erro de login -->
 <?php if ($login_error): ?>
     <div class="error-message">
         <p><?php echo $login_error; ?></p>

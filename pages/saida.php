@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Verifica se o usuário está logado
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -9,10 +8,8 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once('../includes/db.php');
 
-// Conexão com o banco de dados
 $conn = conectarBancoDeDados();
 
-// Consulta entradas sem saída registrada, agora selecionando o nome do motorista
 $entradas_sem_saida = $conn->query("
     SELECT es.id, m.nome AS motorista_nome 
     FROM entradas_saidas es
