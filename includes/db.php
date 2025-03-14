@@ -34,9 +34,6 @@ function criarBancoDeDados() {
 // Função para conectar ao banco de dados
 function conectarBancoDeDados() {
     try {
-        // Cria o banco de dados se ele não existir
-        criarBancoDeDados();
-
         // Conecta ao banco de dados
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
@@ -64,9 +61,4 @@ function fecharConexao($conn) {
 
 // Conecta ao banco de dados
 $conn = conectarBancoDeDados();
-
-// Exemplo de uso:
-// $conn = conectarBancoDeDados();
-// ... (operações com o banco de dados)
-// fecharConexao($conn);
 ?>

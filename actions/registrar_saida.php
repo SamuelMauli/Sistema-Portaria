@@ -1,26 +1,25 @@
 <?php
-// registrar_saida.php
 session_start();
 require_once('../includes/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = trim($_POST['data']);
-    $hora = trim($_POST['hora']);
-    $assunto = trim($_POST['assunto']);
-
-    if (empty($data) || empty($hora) || empty($assunto)) {
-        $_SESSION['error'] = "Todos os campos são obrigatórios.";
-        header('Location: ../pages/saida.php');
-        exit();
-    }
+    $visita_id = intval($_POST['visita_id']);
 
     try {
-        $stmt = $conn->prepare("INSERT INTO reunioes (data, hora, assunto) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $data, $hora, $assunto);
+        // Marca a sala como livre
+        $conn = conectarBancoDeDados();
+        $stmt = $conn->prepare("UPDATE salas SET ocupada = 0 WHERE id = (SELECT sala_aeb_id FROM agenda_visitas WHERE id = ?)");
+        $stmt->bind_param("i", $visita_id);
         $stmt->execute();
-        $_SESSION['success'] = "Reunião agendada com sucesso!";
+
+        // Marca a visita como finalizada
+        $stmt = $conn->prepare("UPDATE agenda_visitas SET hora_visita_saida = NOW() WHERE id = ?");
+        $stmt->bind_param("i", $visita_id);
+        $stmt->execute();
+
+        $_SESSION['success'] = "Sala liberada com sucesso!";
     } catch (Exception $e) {
-        $_SESSION['error'] = "Erro ao agendar reunião: " . $e->getMessage();
+        $_SESSION['erro_visita'] = "Erro ao liberar sala: " . $e->getMessage();
     } finally {
         header('Location: ../pages/saida.php');
         exit();
