@@ -226,6 +226,74 @@ function obterReunioesSemana($conn) {
             left: 0;
         }
 
+        .icon-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .icon-relatorio {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-relatorio:hover {
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background-color: #fff;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+        }
+
+        .modal.show {
+            right: 0;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
         /* Ajustes para telas menores */
         @media (max-width: 768px) {
             .container {
@@ -297,27 +365,32 @@ function obterReunioesSemana($conn) {
                 <h3>Calendário</h3>
                 <div id="calendar" class="calendar"></div>
             </div>
-            <div class="button-section">
-                <div class="botao-relatorio" onclick="gerarRelatorioSemanal()">Relatório Semanal</div>
-                <div class="botao-relatorio" onclick="gerarRelatorioMensal()">Relatório Mensal</div>
-                <div class="botao-relatorio interrogacao" onclick="mostrarAjuda()">?</div>
-            </div>
-
         </main>
 
+        <!-- Botão de Relatórios Fixo -->
+        <div class="icon-section" onclick="abrirModal()">
+            <img src="../assets/img/csv.png" alt="Relatórios" class="icon-relatorio">
+        </div>
 
+        <!-- Modal de Relatórios -->
+        <div id="modalRelatorios" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal()">&times;</span>
+                <h3>Gerar Relatórios</h3>
+                <button onclick="gerarRelatorioSemanal()">Relatório Semanal</button>
+                <button onclick="gerarRelatorioMensal()">Relatório Mensal</button>
+            </div>
+        </div>
 
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <script>
-        // Inicializar o calendário
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: 'https://fullcalendar.io/api/demo-feeds/events.json', // Substitua pela sua API
+                events: 'https://fullcalendar.io/api/demo-feeds/events.json',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -327,18 +400,23 @@ function obterReunioesSemana($conn) {
             calendar.render();
         });
 
+        function abrirModal() {
+            document.getElementById('modalRelatorios').classList.add('show');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalRelatorios').classList.remove('show');
+        }
+
         function gerarRelatorioSemanal() {
-            alert("Relatório Semanal gerado!");
+            window.location.href = 'gerar_relatorio.php?tipo=semanal';
         }
 
         function gerarRelatorioMensal() {
-            alert("Relatório Mensal gerado!");
-        }
-
-        function mostrarAjuda() {
-            alert("Ajuda: Em breve mais informações aqui!");
+            window.location.href = 'gerar_relatorio.php?tipo=mensal';
         }
     </script>
-        <?php include('../includes/footer.php'); ?>
+    
+    <?php include('../includes/footer.php'); ?>
 </body>
 </html>
